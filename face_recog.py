@@ -1,0 +1,89 @@
+import face_recognition
+import cv2
+import numpy as np
+
+video_capture = cv2.VideoCapture(0)
+image_list = ["images/person1.jpg", "images/person2.jpg","images/person3.jpeg"]
+known_faces =[]
+
+known_face_names = [
+    "Ananya Rao",
+    "Sreeharsha A"
+    "Park Jimin"
+]
+
+for i in image_list:
+    image = face_recognition.load_image_file(i)
+    encoding = face_recognition.face_encodings(image)[0]
+    known_faces.append(encoding)
+
+
+
+face_locations = []
+face_encodings = []
+face_names = []
+process_this_frame = True
+
+while True:
+    
+    _, frame = video_capture.read()
+
+    
+    if process_this_frame:
+        
+        frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
+        frame = frame[:, :, ::-1]
+        
+       
+        face_locations = face_recognition.face_locations(frame)
+        face_encodings = face_recognition.face_encodings(frame, face_locations)
+
+        face_names = []
+        for i in face_encodings:
+            matches = face_recognition.compare_faces(known_faces, i)
+            name = "Unknown"
+
+            face_distances = face_recognition.face_distance(known_faces, i)
+            best_match_index = np.argmin(face_distances)
+            if matches[best_match_index]:
+                name = known_face_names[best_match_index]
+
+            face_names.append(name)
+
+    process_this_frame = not process_this_frame
+
+
+    
+    for (top, right, bottom, left), name in zip(face_locations, face_names):
+        
+        top *= 4
+        right *= 4
+        bottom *= 4
+        left *= 4
+        #print(name)
+        if name == "Unknown":
+            cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
+
+            
+            cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), cv2.FILLED)
+            font = cv2.FONT_HERSHEY_DUPLEX
+            cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
+        else:
+            cv2.rectangle(frame, (left, top), (right, bottom), (0, 255, 0), 2)
+
+            
+            cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 255, 0), cv2.FILLED)
+            font = cv2.FONT_HERSHEY_DUPLEX
+            cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
+
+
+    
+    cv2.imshow('Video', frame)
+
+    
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+
+video_capture.release()
+cv2.destroyAllWindows()
