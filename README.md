@@ -13,4 +13,4 @@ To increase the processing speed, the frames are reduced to 1/4th their size and
 
 
 ### Demo
-<img src="person1.jpg>
+<img src="images/person1.jpg>
