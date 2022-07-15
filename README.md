@@ -13,4 +13,4 @@ To increase the processing speed, the frames are reduced to 1/4th their size and
 https://youtu.be/MnmIoUsJdCw
 
 
-![image](https://user-images.githubusercontent.com/79102084/179277001-3e0da310-b21a-434e-a92a-022b5ab0ae6b.png)
+![image](https://user-images.githubusercontent.com/79102084/179277204-9ae04146-860f-47fe-95e9-8b5f04f3fa4e.png)
